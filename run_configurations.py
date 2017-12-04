@@ -69,14 +69,16 @@ Ref_LLCMisses=0
 Ref_Latency=0
 partition_list_str = "llc:0={}".format(masks[num_partitions])
 allocation_list_str ="llc:0={}-{}".format(0, num_cores)
+
+allocation_list_str ="llc:0={}-{}, llc:1={}-{}".format(0, num_cores, num_cores+1, 7)
+#print "{}-{}".format(num_partitions, num_cores)
+cmd= "sudo pqos -e {} -a {}".format(partition_list_str, allocation_list_str)
+print cmd
+os.system(cmd)
+  
 for i in range(5):
     # thrash llc
     cmd = "./thrash_cache.o"
-    os.system(cmd)
-    allocation_list_str ="llc:0={}-{}, llc:1={}-{}".format(0, num_cores, num_cores+1, 7)
-    #print "{}-{}".format(num_partitions, num_cores)
-    cmd= "sudo pqos -e {} -a {}".format(partition_list_str, allocation_list_str)
-    print cmd
     os.system(cmd)
     log_name="log-{}-{}-{}.txt".format(num_partitions, num_cores, i)
     cmd= "perf stat -e cycles,cpu-clock,cache-references,instructions,LLC-loads,LLC-load-misses,LLC-stores,LLC-prefetches -o {} taskset -c {}-{} {}".format(log_name, 0, num_cores, options.command, log_name)
@@ -113,21 +115,27 @@ iteration=0
 jumpSize=4
 #while (True):
 
+try:
+	the_file = open("/home/josers2/report_{}.txt".format(options.name), 'w')
+except:
+	print("File cannot be opened")
+
 for num_partitions in [2, 4, 6, 8, 10, 12, 14, 16, 18]:
     latency=0
     LLCMisses=0
     IPC=0
     partition_list_str = "llc:0={}".format(masks[num_partitions])
+    allocation_list_str ="llc:0={}-{}".format(0, num_cores)
+    #print "{}-{}".format(num_partitions, num_cores)
+    cmd= "sudo pqos -e {} -a {}".format(partition_list_str, allocation_list_str)
+    print cmd
+    os.system(cmd)
+   
     for i in range(5):
         # thrash llc
         cmd = "./thrash_cache.o"
         os.system(cmd)
-        allocation_list_str ="llc:0={}-{}".format(0, num_cores)
-        #print "{}-{}".format(num_partitions, num_cores)
-        cmd= "sudo pqos -e {} -a {}".format(partition_list_str, allocation_list_str)
-        print cmd
-        os.system(cmd)
-
+        
         log_name="log-{}-{}-{}.txt".format(num_partitions, num_cores, i)
         cmd= "perf stat -e cycles,cpu-clock,cache-references,instructions,LLC-loads,LLC-load-misses,LLC-stores,LLC-prefetches -o {} taskset -c {}-{} {}".format(log_name, 0, num_cores, options.command, log_name)
         os.system(cmd)
@@ -145,10 +153,10 @@ for num_partitions in [2, 4, 6, 8, 10, 12, 14, 16, 18]:
     LLCMisses/=5
     latency/=5
     print "num_partition is: {} , latency is: {}".format(num_partitions, latency)
-    with open("~/report_{}.txt".format(options.name), 'a') as the_file:
-        the_file.write("num_partition: {}\n".format(num_partitions))
-        the_file.write("IPC, MissRate, Latency: {}, {}, {}\n\n".format(IPC, LLCMisses, latency))
+    the_file.write("num_partition: {}\n".format(num_partitions))
+    the_file.write("IPC, MissRate, Latency: {}, {}, {}\n\n".format(IPC, LLCMisses, latency))
 
+the_file.close()
 #    if (LLCMisses > lower_bound * Ref_LLCMisses and LLCMisses < upper_bound * Ref_LLCMisses):
 #        #or (IPC > lower_bound * Ref_IPC and IPC < upper_bound * Ref_IPC):
 #        break;

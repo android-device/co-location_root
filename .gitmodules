@@ -7,3 +7,6 @@
 [submodule "x-stream"]
 	path = x-stream
 	url = ./x-stream
+[submodule "pivotalrd-libhdfs3"]
+	path = pivotalrd-libhdfs3
+	url = https://github.com/Pivotal-Data-Attic/pivotalrd-libhdfs3
