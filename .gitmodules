@@ -1,3 +1,6 @@
 [submodule "BigDataBench_V3.2.1_Hadoop_Hive"]
 	path = BigDataBench_V3.2.1_Hadoop_Hive
 	url = ./BigDataBench_V3.2.1_Hadoop_Hive
+[submodule "HiBench"]
+	path = HiBench
+	url = ./HiBench
