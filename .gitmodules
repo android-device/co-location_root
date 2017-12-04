@@ -4,3 +4,6 @@
 [submodule "HiBench"]
 	path = HiBench
 	url = ./HiBench
+[submodule "x-stream"]
+	path = x-stream
+	url = ./x-stream
