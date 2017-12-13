@@ -1,0 +1,5 @@
+This repository contains the scripts used to configure and run various workloads for workload characterization.
+
+Characterization is done using Intel Cache Allocation Technology (CAT), due to the performance guarantees CAT provides when workloads are co-located. Once the workload performance is correlated to the LLC size, it's working set size has been determined, a profile is created which can be used for co-location.
+
+The submodules in this repository are the workloads which have been profiled.
