@@ -61,6 +61,8 @@ while (True):
     print search_idx
     if search_idx > 8:
         search_idx = 8
+    if search_idx < 0:
+        search_idx = 0
     # print jumpSize
     if seen[search_idx] == 1:
         print "break1"

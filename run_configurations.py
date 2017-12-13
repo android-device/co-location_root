@@ -52,75 +52,17 @@ masks=['0x00003', '0x00007','0x0000F',\
        '0x1FFFF', '0x3FFFF', '0x7FFFF', '0xFFFFF']
 
 options=parse()
-#if int(options.socket) == 0:
-#	offset=0
-#elif int(options.socket) == 1:
-#	offset=16
-
-def run_workload(cmd):
-    print cmd
-    os.system(cmd)
-
-# calculate the reference LLCMiss and IPC
-num_partitions=18
-num_cores=7
-Ref_IPC=0
-Ref_LLCMisses=0
-Ref_Latency=0
-partition_list_str = "llc:0={}".format(masks[num_partitions])
-allocation_list_str ="llc:0={}-{}".format(0, num_cores)
-
-allocation_list_str ="llc:0={}-{}, llc:1={}-{}".format(0, num_cores, num_cores+1, 7)
-#print "{}-{}".format(num_partitions, num_cores)
-cmd= "sudo pqos -e {} -a {}".format(partition_list_str, allocation_list_str)
-print cmd
-os.system(cmd)
-  
-for i in range(5):
-    # thrash llc
-    cmd = "./thrash_cache.o"
-    os.system(cmd)
-    log_name="log-{}-{}-{}.txt".format(num_partitions, num_cores, i)
-    cmd= "perf stat -e cycles,cpu-clock,cache-references,instructions,LLC-loads,LLC-load-misses,LLC-stores,LLC-prefetches -o {} taskset -c {}-{} {}".format(log_name, 0, num_cores, options.command, log_name)
-    print cmd
-    os.system(cmd)
-    cmd= "cat ./{}".format(log_name)
-    (out, err) = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
-    out=out.split("\n")[:-1]
-    m=re.search('\d*\.\d*', out[8])
-    #print m.group(0)
-    Ref_IPC+=float(m.group(0))
-    m=re.search('\d*\.\d*', out[10])
-    #print m.group(0)
-    Ref_LLCMisses+=float(m.group(0))
-    Ref_Latency+=float(out[14].lstrip(' ').split(' ')[0])
-
-# take average of Ref_IPC and Ref_LLCMisses
-Ref_IPC/=5
-Ref_LLCMisses/=5
-Ref_Latency/=5
-
-print "Reference IPC is: {}".format(Ref_IPC)
-print "Refernce LLC Misses is: {}".format(Ref_LLCMisses)
-print "Refernce Latency is: {}".format(Ref_Latency)
-
 #for num_partitions in range(18) : #change number of ways from 1 to 20
-num_partitions=2
 num_cores=8
-iteration=0
-IPC=0
-LLCMisses=0
-iteration=0
-
-jumpSize=4
-#while (True):
 
 try:
 	the_file = open("/home/josers2/report_{}.txt".format(options.name), 'w')
 except:
 	print("File cannot be opened")
 
-for num_partitions in [2, 4, 6, 8, 10, 12, 14, 16, 18]:
+configurations=[2, 4, 6, 8, 10, 12, 14, 16, 18]
+
+for num_partitions in configurations:
     latency=0
     LLCMisses=0
     IPC=0
@@ -130,12 +72,12 @@ for num_partitions in [2, 4, 6, 8, 10, 12, 14, 16, 18]:
     cmd= "sudo pqos -e {} -a {}".format(partition_list_str, allocation_list_str)
     print cmd
     os.system(cmd)
-   
+
     for i in range(5):
         # thrash llc
-        cmd = "./thrash_cache.o"
+        cmd = "/home/josers2/thrash_cache.o"
         os.system(cmd)
-        
+
         log_name="log-{}-{}-{}.txt".format(num_partitions, num_cores, i)
         cmd= "perf stat -e cycles,cpu-clock,cache-references,instructions,LLC-loads,LLC-load-misses,LLC-stores,LLC-prefetches -o {} taskset -c {}-{} {}".format(log_name, 0, num_cores, options.command, log_name)
         os.system(cmd)
@@ -157,6 +99,8 @@ for num_partitions in [2, 4, 6, 8, 10, 12, 14, 16, 18]:
     the_file.write("IPC, MissRate, Latency: {}, {}, {}\n\n".format(IPC, LLCMisses, latency))
 
 the_file.close()
+
+
 #    if (LLCMisses > lower_bound * Ref_LLCMisses and LLCMisses < upper_bound * Ref_LLCMisses):
 #        #or (IPC > lower_bound * Ref_IPC and IPC < upper_bound * Ref_IPC):
 #        break;
