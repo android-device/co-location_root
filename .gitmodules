@@ -1,12 +1,12 @@
 [submodule "BigDataBench_V3.2.1_Hadoop_Hive"]
 	path = BigDataBench_V3.2.1_Hadoop_Hive
-	url = ./BigDataBench_V3.2.1_Hadoop_Hive
+	url = https://github.com/android-device/bigDataBench
 [submodule "HiBench"]
 	path = HiBench
-	url = ./HiBench
+	url = https://github.com/android-device/hibench
 [submodule "x-stream"]
 	path = x-stream
-	url = ./x-stream
+	url = https://github.com/android-device/x-stream
 [submodule "pivotalrd-libhdfs3"]
 	path = pivotalrd-libhdfs3
 	url = https://github.com/Pivotal-Data-Attic/pivotalrd-libhdfs3
