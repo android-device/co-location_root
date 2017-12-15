@@ -1,0 +1,27 @@
+num_partition: 2
+IPC, MissRate, Latency: 4.488, 27.928, 0.0073349338
+
+num_partition: 4
+IPC, MissRate, Latency: 38.34, 18.1, 0.0067846218
+
+num_partition: 6
+IPC, MissRate, Latency: 2.306, 10.78, 0.0058368782
+
+num_partition: 8
+IPC, MissRate, Latency: 14.128, 12.628, 0.0058691192
+
+num_partition: 10
+IPC, MissRate, Latency: 3.512, 10.436, 0.0060093496
+
+num_partition: 12
+IPC, MissRate, Latency: 135.77, 1.962, 0.005179099
+
+num_partition: 14
+IPC, MissRate, Latency: 2.328, 4.21, 0.0056244358
+
+num_partition: 16
+IPC, MissRate, Latency: 28.406, 2.65, 0.0052599446
+
+num_partition: 18
+IPC, MissRate, Latency: 38.49, 0.86, 0.0051420492
+
